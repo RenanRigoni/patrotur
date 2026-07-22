@@ -158,7 +158,7 @@ export function DestinationCarousel({ destinations }: DestinationCarouselProps) 
         onDragStart={(event) => event.preventDefault()}
         role="region"
         aria-label="Destinos em destaque"
-        className="flex cursor-grab select-none gap-6 overflow-x-auto px-6 pb-4 [scrollbar-width:none] snap-x snap-mandatory active:cursor-grabbing sm:px-8 sm:pb-6 [&::-webkit-scrollbar]:hidden"
+        className="flex cursor-grab select-none gap-6 overflow-x-auto px-6 pb-4 [scrollbar-width:none] snap-x snap-mandatory active:cursor-grabbing sm:px-8 sm:pb-6 [&::-webkit-scrollbar]:hidden [scroll-padding-left:24px] sm:[scroll-padding-left:32px]"
       >
         {loopedItems.map((destination) => (
           <DestinationCard
