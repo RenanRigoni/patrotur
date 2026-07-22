@@ -21,7 +21,31 @@ export const site = {
     url: "https://www.instagram.com/patrotur_turismo/",
   },
   whatsappBaseUrl: "https://wa.me/5534988554574",
+  timeZone: "America/Sao_Paulo",
 } as const;
 
-export const foundedYear = new Date(site.foundedAt).getFullYear();
-export const yearsInBusiness = new Date().getFullYear() - foundedYear;
+export function getCompletedYears(
+  foundedAt: string,
+  currentDate = new Date(),
+  timeZone = site.timeZone,
+) {
+  const [startYear, startMonth, startDay] = foundedAt.split("-").map(Number);
+  const currentDateParts = new Intl.DateTimeFormat("en-US", {
+    timeZone,
+    year: "numeric",
+    month: "numeric",
+    day: "numeric",
+  }).formatToParts(currentDate);
+  const readDatePart = (type: "year" | "month" | "day") =>
+    Number(currentDateParts.find((part) => part.type === type)?.value);
+  const currentYear = readDatePart("year");
+  const currentMonth = readDatePart("month");
+  const currentDay = readDatePart("day");
+  const anniversaryHasPassed =
+    currentMonth > startMonth || (currentMonth === startMonth && currentDay >= startDay);
+
+  return currentYear - startYear - (anniversaryHasPassed ? 0 : 1);
+}
+
+export const foundedYear = Number(site.foundedAt.slice(0, 4));
+export const yearsInBusiness = getCompletedYears(site.foundedAt);

@@ -1,8 +1,8 @@
 import { Reveal } from "@/components/ui/Reveal";
-import { foundedYear, yearsInBusiness } from "@/content/site";
+import { YearsInBusiness } from "@/components/trust/YearsInBusiness";
+import { foundedYear, site, yearsInBusiness } from "@/content/site";
 
 const items = [
-  `${yearsInBusiness}+ anos em Patrocínio`,
   "Atendimento humano e personalizado",
   "Viagens nacionais e internacionais",
   "Parcelamento facilitado",
@@ -34,6 +34,10 @@ export function TrustBar() {
         </ul>
 
         <ul className="mx-auto hidden max-w-[90rem] items-center justify-center overflow-x-auto px-6 [scrollbar-width:none] sm:flex sm:flex-nowrap sm:px-8 md:divide-x md:divide-navy-900/15 [&::-webkit-scrollbar]:hidden">
+          <li className="whitespace-nowrap px-5 text-sm font-medium text-navy-900/70 first:pl-0 last:pr-0">
+            <YearsInBusiness foundedAt={site.foundedAt} initialYears={yearsInBusiness} />+ anos em
+            Patrocínio
+          </li>
           {items.map((item) => (
             <li key={item} className="whitespace-nowrap px-5 text-sm font-medium text-navy-900/70 first:pl-0 last:pr-0">
               {item}
