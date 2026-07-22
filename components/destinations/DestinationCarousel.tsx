@@ -92,8 +92,10 @@ export function DestinationCarousel({ destinations }: DestinationCarouselProps) 
   const scrollByCard = (direction: "left" | "right") => {
     const el = trackRef.current;
     if (!el) return;
-    const amount = el.clientWidth * 0.8 * (direction === "left" ? -1 : 1);
-    el.scrollBy({ left: amount, behavior: "smooth" });
+    const card = el.firstElementChild as HTMLElement | null;
+    const gap = parseFloat(getComputedStyle(el).columnGap || "0");
+    const step = card ? card.offsetWidth + gap : el.clientWidth;
+    el.scrollBy({ left: step * (direction === "left" ? -1 : 1), behavior: "smooth" });
   };
 
   const handlePointerDown = (event: ReactPointerEvent<HTMLDivElement>) => {
