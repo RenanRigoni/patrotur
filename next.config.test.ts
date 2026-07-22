@@ -27,6 +27,7 @@ describe("Next.js static export configuration", () => {
       images: {
         loader: "custom",
         loaderFile: "./lib/github-pages-image-loader.ts",
+        deviceSizes: [640, 960, 1600, 2048],
       },
       env: {
         NEXT_PUBLIC_BASE_PATH: "/patrotur",

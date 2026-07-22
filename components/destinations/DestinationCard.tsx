@@ -1,4 +1,3 @@
-import Image from "next/image";
 import type { Destination } from "@/content/destinations";
 import { buildWhatsAppLink } from "@/lib/whatsapp";
 import { whatsappMessages } from "@/content/whatsapp-messages";
@@ -9,6 +8,10 @@ interface DestinationCardProps {
 }
 
 export function DestinationCard({ destination, offset = false }: DestinationCardProps) {
+  const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
+  const imageKey = destination.image.split("/").at(-1)?.replace(/\.[^.]+$/, "") ?? destination.slug;
+  const imageBase = `${basePath}/images/destinations/cards/${imageKey}`;
+
   return (
     <a
       href={buildWhatsAppLink(whatsappMessages.destination(destination.name))}
@@ -18,13 +21,19 @@ export function DestinationCard({ destination, offset = false }: DestinationCard
         offset ? "sm:translate-y-8" : ""
       }`}
     >
-      <Image
-        src={destination.image}
+      {/* The exact two variants keep this repeated carousel light on static hosting. */}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={`${imageBase}-640.webp`}
+        srcSet={`${imageBase}-640.webp 640w, ${imageBase}-960.webp 960w`}
         alt={`${destination.name}, ${destination.region}. ${destination.teaser}`}
-        fill
+        width="640"
+        height="904"
         loading="lazy"
+        decoding="async"
         sizes="(min-width: 640px) 340px, 78vw"
-        className="object-cover transition-transform duration-700 ease-out group-hover:scale-110"
+        draggable={false}
+        className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
       />
       <div className="absolute inset-0 bg-gradient-to-t from-navy-950/90 via-navy-950/10 to-transparent" />
 

@@ -13,6 +13,31 @@ afterEach(() => {
 });
 
 describe("GitHub Pages image loader", () => {
+  it.each([
+    [320, 640],
+    [640, 640],
+    [641, 960],
+    [960, 960],
+    [961, 1600],
+    [1600, 1600],
+    [1601, 2048],
+    [3000, 2048],
+  ])("maps a %ipx destination request to the %ipx WebP variant", (width, assetWidth) => {
+    process.env.NEXT_PUBLIC_BASE_PATH = "/patrotur";
+
+    expect(
+      imageLoader({ src: "/images/destinations/gramado.jpg", width }),
+    ).toBe(`/patrotur/images/destinations/responsive/gramado-${assetWidth}.webp`);
+  });
+
+  it("does not duplicate the base path for responsive destination images", () => {
+    process.env.NEXT_PUBLIC_BASE_PATH = "/patrotur";
+
+    expect(
+      imageLoader({ src: "/patrotur/images/destinations/gramado.jpg", width: 640 }),
+    ).toBe("/patrotur/images/destinations/responsive/gramado-640.webp");
+  });
+
   it("prefixes local images with the repository base path", () => {
     process.env.NEXT_PUBLIC_BASE_PATH = "/patrotur";
 
