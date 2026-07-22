@@ -15,8 +15,10 @@ export function Footer() {
             className="h-7 w-auto"
           />
           <p className="mt-3 max-w-xs text-sm leading-relaxed">
-            Agência de viagens em Patrocínio, MG. Roteiros nacionais e
-            internacionais planejados de forma pessoal.
+            <span className="block whitespace-nowrap">Agência de viagens em Patrocínio/MG.</span>
+            <span className="block">
+              Roteiros nacionais e internacionais planejados de forma pessoal.
+            </span>
           </p>
         </div>
 
