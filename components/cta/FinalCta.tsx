@@ -39,7 +39,7 @@ export function FinalCta() {
         width={420}
         height={560}
         loading="lazy"
-        className="pointer-events-none absolute -bottom-6 right-0 hidden w-40 drop-shadow-2xl sm:block sm:w-52 lg:right-10 lg:w-64"
+        className="pointer-events-none absolute bottom-2 right-0 hidden w-40 drop-shadow-2xl sm:block sm:w-52 lg:right-10 lg:w-64"
       />
     </section>
   );
