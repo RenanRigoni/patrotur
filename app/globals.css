@@ -1,0 +1,68 @@
+@import "tailwindcss";
+
+/*
+  Paleta provisória extraída da identidade atual da Patrotur (navy institucional,
+  azul vívido, turquesa, branco, accent quente). Trocar por extração exata do
+  logo oficial assim que ele estiver disponível. Ver BENCHMARK.md.
+*/
+@theme {
+  --color-navy-950: #060f21;
+  --color-navy-900: #0b1a33;
+  --color-navy-800: #122747;
+  --color-navy-700: #1a3663;
+
+  --color-blue-600: #1652c9;
+  --color-blue-500: #2568e8;
+  --color-blue-400: #4f8bf7;
+
+  --color-turquoise-500: #10b8c4;
+  --color-turquoise-400: #3fd4dd;
+  --color-turquoise-300: #8ee9ec;
+
+  --color-sand-50: #fbf8f2;
+  --color-amber-500: #f2a93b;
+
+  --color-ink: #0b1220;
+  --color-paper: #fefdfb;
+}
+
+@theme inline {
+  --font-sans: var(--font-jakarta);
+  --font-accent: var(--font-caveat);
+}
+
+:root {
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --duration-fast: 200ms;
+  --duration-normal: 500ms;
+  --duration-slow: 900ms;
+}
+
+body {
+  background: var(--color-paper);
+  color: var(--color-ink);
+}
+
+@keyframes hero-kenburns {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.08);
+  }
+}
+
+.animate-hero-kenburns {
+  animation: hero-kenburns 20s var(--ease-out-expo) forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
