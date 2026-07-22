@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
 import { Button } from "@/components/ui/Button";
@@ -14,6 +14,18 @@ interface MobileMenuProps {
 
 export function MobileMenu({ isScrolled, links }: MobileMenuProps) {
   const [isOpen, setIsOpen] = useState(false);
+
+  // Trava o scroll do body enquanto o menu está aberto. Sem isso, a página
+  // de fundo continua rolando atrás do overlay fixo (glitch ao arrastar) e
+  // o toque no hambúrguer some às vezes por coincidir com o momentum-scroll.
+  useEffect(() => {
+    if (!isOpen) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [isOpen]);
 
   return (
     <div className="md:hidden">
