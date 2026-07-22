@@ -18,6 +18,7 @@ const links = [
 
 export function Nav() {
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { scrollY } = useScroll();
 
   useMotionValueEvent(scrollY, "change", (latest) => {
@@ -31,7 +32,7 @@ export function Nav() {
       }`}
     >
       <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 sm:px-8">
-        <Link href="#topo" className="shrink-0">
+        <Link href="#topo" className={`shrink-0 ${isMobileMenuOpen ? "invisible md:visible" : ""}`}>
           <Image
             src={isScrolled ? "/images/PATROTUR_HOR.png" : "/images/PATROTUR_HOR_WHITE.png"}
             alt="Patrotur Turismo"
@@ -68,7 +69,7 @@ export function Nav() {
           </Button>
         </div>
 
-        <MobileMenu isScrolled={isScrolled} links={links} />
+        <MobileMenu isScrolled={isScrolled} links={links} onOpenChange={setIsMobileMenuOpen} />
       </nav>
     </header>
   );

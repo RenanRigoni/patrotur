@@ -11,10 +11,15 @@ import { whatsappMessages } from "@/content/whatsapp-messages";
 interface MobileMenuProps {
   isScrolled: boolean;
   links: { href: string; label: string }[];
+  onOpenChange?: (isOpen: boolean) => void;
 }
 
-export function MobileMenu({ isScrolled, links }: MobileMenuProps) {
+export function MobileMenu({ isScrolled, links, onOpenChange }: MobileMenuProps) {
   const [isOpen, setIsOpen] = useState(false);
+
+  useEffect(() => {
+    onOpenChange?.(isOpen);
+  }, [isOpen, onOpenChange]);
 
   // Trava o scroll do body enquanto o menu está aberto. Sem isso, a página
   // de fundo continua rolando atrás do overlay fixo (glitch ao arrastar) e
