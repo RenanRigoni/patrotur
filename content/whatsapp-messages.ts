@@ -7,9 +7,9 @@ export const whatsappMessages = {
     `Olá! Vi o destino ${destinationName} no site da Patrotur e gostaria de saber quais possibilidades vocês têm.`,
   travelStyle: (intent: string) =>
     `Olá! Gostaria de planejar ${intent} com a Patrotur.`,
-  simulator: (details: { destination: string; period: string; travelers: number; budget: string }) =>
+  simulator: (details: { destinations: string[]; period: string; travelers: number; budget: string }) =>
     `Olá! Fiz uma simulação de viagem no site da Patrotur:\n\n` +
-    `📍 Destino: ${details.destination}\n` +
+    `📍 Destino(s): ${details.destinations.join(", ")}\n` +
     `🗓️ Período: ${details.period}\n` +
     `👥 Viajantes: ${details.travelers}\n` +
     `💰 Investimento por pessoa: ${details.budget}\n\n` +

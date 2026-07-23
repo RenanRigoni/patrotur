@@ -6,11 +6,16 @@ import { Button } from "@/components/ui/Button";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Reveal } from "@/components/ui/Reveal";
 import { PartnerLogos } from "@/components/simulator/PartnerLogos";
-import { destinations } from "@/content/destinations";
+import {
+  nationalFeatured,
+  nationalMore,
+  internationalFeatured,
+  internationalMore,
+} from "@/content/simulator-destinations";
 import { buildWhatsAppLink } from "@/lib/whatsapp";
 import { whatsappMessages } from "@/content/whatsapp-messages";
 
-const quickDestinations = destinations.slice(0, 8).map((destination) => destination.name);
+type Scope = "nacional" | "internacional";
 
 const budgetRanges = [
   "Até R$ 2.000 por pessoa",
@@ -22,7 +27,7 @@ const budgetRanges = [
 
 const steps = ["Destino", "Período", "Viajantes", "Investimento", "Resumo"] as const;
 
-const choiceButtonClasses = (isSelected: boolean) =>
+const chipClasses = (isSelected: boolean) =>
   `rounded-full border px-4 py-2 text-sm font-semibold transition-all duration-300 ${
     isSelected
       ? "border-turquoise-500 bg-turquoise-500/10 text-navy-950"
@@ -31,17 +36,22 @@ const choiceButtonClasses = (isSelected: boolean) =>
 
 export function TravelSimulator() {
   const [stepIndex, setStepIndex] = useState(0);
-  const [destination, setDestination] = useState<string | null>(null);
-  const [customDestination, setCustomDestination] = useState("");
+  const [scope, setScope] = useState<Scope>("nacional");
+  const [selectedDestinations, setSelectedDestinations] = useState<string[]>([]);
+  const [isAddingOther, setIsAddingOther] = useState(false);
+  const [otherValue, setOtherValue] = useState("");
   const [period, setPeriod] = useState("");
   const [travelers, setTravelers] = useState(2);
   const [budget, setBudget] = useState<string | null>(null);
 
-  const resolvedDestination = (destination === "outro" ? customDestination : destination)?.trim();
+  const featured = scope === "nacional" ? nationalFeatured : internationalFeatured;
+  const moreOptions = scope === "nacional" ? nationalMore : internationalMore;
+  const datalistId = scope === "nacional" ? "destinos-nacionais" : "destinos-internacionais";
+
   const isLastStep = stepIndex === steps.length - 1;
 
   const canAdvance = [
-    Boolean(resolvedDestination),
+    selectedDestinations.length > 0,
     period.trim().length > 0,
     travelers > 0,
     Boolean(budget),
@@ -50,20 +60,39 @@ export function TravelSimulator() {
   const goNext = () => setStepIndex((current) => Math.min(current + 1, steps.length - 1));
   const goBack = () => setStepIndex((current) => Math.max(current - 1, 0));
 
+  const toggleDestination = (name: string) => {
+    setSelectedDestinations((current) =>
+      current.includes(name) ? current.filter((item) => item !== name) : [...current, name],
+    );
+  };
+
+  const removeDestination = (name: string) => {
+    setSelectedDestinations((current) => current.filter((item) => item !== name));
+  };
+
+  const addOtherDestination = () => {
+    const value = otherValue.trim();
+    if (!value) return;
+    setSelectedDestinations((current) => (current.includes(value) ? current : [...current, value]));
+    setOtherValue("");
+  };
+
   const resetSimulator = () => {
     setStepIndex(0);
-    setDestination(null);
-    setCustomDestination("");
+    setScope("nacional");
+    setSelectedDestinations([]);
+    setIsAddingOther(false);
+    setOtherValue("");
     setPeriod("");
     setTravelers(2);
     setBudget(null);
   };
 
   const whatsappHref =
-    resolvedDestination && budget
+    selectedDestinations.length > 0 && budget
       ? buildWhatsAppLink(
           whatsappMessages.simulator({
-            destination: resolvedDestination,
+            destinations: selectedDestinations,
             period,
             travelers,
             budget,
@@ -78,7 +107,7 @@ export function TravelSimulator() {
           <SectionHeading
             eyebrow="Simulador de viagem"
             title="Monte uma prévia da sua viagem"
-            description="Responda 4 perguntas rápidas e receba um resumo pra conversar com a gente. O valor final depende da disponibilidade real de aéreo e hospedagem no momento da compra."
+            description="Responda algumas perguntas rápidas — pode escolher mais de um destino — e receba um resumo pra conversar com a gente. O valor final depende da disponibilidade real de aéreo e hospedagem no momento da compra."
           />
         </Reveal>
 
@@ -106,34 +135,101 @@ export function TravelSimulator() {
                 >
                   {stepIndex === 0 && (
                     <fieldset>
-                      <legend className="text-lg font-bold text-navy-950">Para onde você quer ir?</legend>
+                      <legend className="text-lg font-bold text-navy-950">
+                        Para onde você quer ir? (pode escolher mais de um)
+                      </legend>
+
+                      <div role="group" aria-label="Tipo de destino" className="mt-4 inline-flex rounded-full border border-navy-900/15 p-1">
+                        <button
+                          type="button"
+                          onClick={() => setScope("nacional")}
+                          className={`rounded-full px-4 py-1.5 text-sm font-semibold transition-all duration-300 ${
+                            scope === "nacional" ? "bg-turquoise-500 text-navy-950" : "text-navy-900/60"
+                          }`}
+                        >
+                          Nacional
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setScope("internacional")}
+                          className={`rounded-full px-4 py-1.5 text-sm font-semibold transition-all duration-300 ${
+                            scope === "internacional" ? "bg-turquoise-500 text-navy-950" : "text-navy-900/60"
+                          }`}
+                        >
+                          Internacional
+                        </button>
+                      </div>
+
                       <div className="mt-5 flex flex-wrap gap-2.5">
-                        {quickDestinations.map((name) => (
+                        {featured.map((name) => (
                           <button
                             key={name}
                             type="button"
-                            onClick={() => setDestination(name)}
-                            className={choiceButtonClasses(destination === name)}
+                            onClick={() => toggleDestination(name)}
+                            className={chipClasses(selectedDestinations.includes(name))}
                           >
                             {name}
                           </button>
                         ))}
                         <button
                           type="button"
-                          onClick={() => setDestination("outro")}
-                          className={choiceButtonClasses(destination === "outro")}
+                          onClick={() => setIsAddingOther((current) => !current)}
+                          className={chipClasses(isAddingOther)}
                         >
                           Outro destino
                         </button>
                       </div>
-                      {destination === "outro" && (
-                        <input
-                          type="text"
-                          value={customDestination}
-                          onChange={(event) => setCustomDestination(event.target.value)}
-                          placeholder="Digite o destino"
-                          className="mt-4 w-full rounded-2xl border border-navy-900/15 px-4 py-3 text-navy-950 outline-none transition-colors focus:border-turquoise-500"
-                        />
+
+                      {isAddingOther && (
+                        <div className="mt-4 flex flex-col gap-2 sm:flex-row">
+                          <input
+                            type="text"
+                            list={datalistId}
+                            value={otherValue}
+                            onChange={(event) => setOtherValue(event.target.value)}
+                            onKeyDown={(event) => {
+                              if (event.key === "Enter") {
+                                event.preventDefault();
+                                addOtherDestination();
+                              }
+                            }}
+                            placeholder="Digite ou busque o destino"
+                            className="w-full rounded-2xl border border-navy-900/15 px-4 py-3 text-navy-950 outline-none transition-colors focus:border-turquoise-500"
+                          />
+                          <datalist id={datalistId}>
+                            {moreOptions.map((name) => (
+                              <option key={name} value={name} />
+                            ))}
+                          </datalist>
+                          <button
+                            type="button"
+                            onClick={addOtherDestination}
+                            className="shrink-0 rounded-2xl bg-navy-950 px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-navy-900"
+                          >
+                            Adicionar
+                          </button>
+                        </div>
+                      )}
+
+                      {selectedDestinations.length > 0 && (
+                        <div className="mt-5 flex flex-wrap gap-2 border-t border-navy-900/10 pt-5">
+                          {selectedDestinations.map((name) => (
+                            <span
+                              key={name}
+                              className="flex items-center gap-2 rounded-full bg-navy-950 py-1.5 pl-4 pr-2 text-xs font-semibold text-white"
+                            >
+                              {name}
+                              <button
+                                type="button"
+                                onClick={() => removeDestination(name)}
+                                aria-label={`Remover ${name}`}
+                                className="flex h-5 w-5 items-center justify-center rounded-full bg-white/15 text-white transition-colors hover:bg-white/30"
+                              >
+                                ×
+                              </button>
+                            </span>
+                          ))}
+                        </div>
                       )}
                     </fieldset>
                   )}
@@ -209,9 +305,11 @@ export function TravelSimulator() {
                       <div>
                         <p className="text-lg font-bold text-navy-950">Sua viagem simulada</p>
                         <dl className="mt-4 grid grid-cols-2 gap-4 text-sm sm:grid-cols-4">
-                          <div>
-                            <dt className="text-navy-900/50">Destino</dt>
-                            <dd className="font-semibold text-navy-950">{resolvedDestination}</dd>
+                          <div className="col-span-2 sm:col-span-4">
+                            <dt className="text-navy-900/50">Destino(s)</dt>
+                            <dd className="font-semibold text-navy-950">
+                              {selectedDestinations.join(", ")}
+                            </dd>
                           </div>
                           <div>
                             <dt className="text-navy-900/50">Período</dt>
@@ -221,7 +319,7 @@ export function TravelSimulator() {
                             <dt className="text-navy-900/50">Viajantes</dt>
                             <dd className="font-semibold text-navy-950">{travelers}</dd>
                           </div>
-                          <div>
+                          <div className="col-span-2">
                             <dt className="text-navy-900/50">Investimento</dt>
                             <dd className="font-semibold text-navy-950">{budget}</dd>
                           </div>
@@ -229,8 +327,8 @@ export function TravelSimulator() {
                       </div>
                       <p className="rounded-2xl bg-navy-950/5 px-4 py-3 text-xs leading-relaxed text-navy-900/60">
                         Essa simulação é uma estimativa pra organizar sua ideia de viagem. Passagem aérea, hospedagem
-                        e câmbio mudam de preço a todo momento — o valor real é confirmado com nossas operadoras
-                        parceiras no momento da compra.
+                        e câmbio mudam de preço a todo momento — o valor real de cada destino escolhido é confirmado
+                        com nossas operadoras parceiras no momento da compra.
                       </p>
                       <div className="flex flex-wrap items-center gap-4">
                         <Button href={whatsappHref} variant="primary" external>
