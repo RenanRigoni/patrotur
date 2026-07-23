@@ -298,7 +298,7 @@ export function TravelSimulator() {
                   )}
 
                   {stepIndex === 2 && (
-                    <div className="flex flex-col gap-8">
+                    <div className="flex flex-col gap-8 sm:flex-row sm:gap-12">
                       <div>
                         <p className="text-lg font-bold text-navy-950">Quantas pessoas vão viajar?</p>
                         <div className="mt-5 flex items-center gap-6">
