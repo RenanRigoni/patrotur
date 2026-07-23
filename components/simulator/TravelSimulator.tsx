@@ -181,6 +181,7 @@ export function TravelSimulator() {
                           <button
                             key={scopeOption}
                             type="button"
+                            aria-pressed={scope === scopeOption}
                             onClick={() => setScope(scopeOption)}
                             className={`rounded-full px-4 py-1.5 text-sm font-semibold transition-all duration-300 ${
                               scope === scopeOption ? "bg-turquoise-500 text-navy-950" : "text-navy-900/60"
@@ -203,6 +204,7 @@ export function TravelSimulator() {
                           <button
                             key={name}
                             type="button"
+                            aria-pressed={selectedDestinations.includes(name)}
                             onClick={() => toggleDestination(name)}
                             className={chipClasses(selectedDestinations.includes(name))}
                           >
@@ -267,7 +269,7 @@ export function TravelSimulator() {
                                 type="button"
                                 onClick={() => removeDestination(name)}
                                 aria-label={`Remover ${name}`}
-                                className="flex h-5 w-5 items-center justify-center rounded-full bg-white/15 text-white transition-colors hover:bg-white/30"
+                                className="flex h-6 w-6 items-center justify-center rounded-full bg-white/15 text-white transition-colors hover:bg-white/30"
                               >
                                 ×
                               </button>
@@ -355,6 +357,7 @@ export function TravelSimulator() {
                           <button
                             key={range}
                             type="button"
+                            aria-pressed={budget === range}
                             onClick={() => setBudget(range)}
                             className={`rounded-2xl border px-4 py-3 text-left text-sm font-semibold transition-all duration-300 ${
                               budget === range
