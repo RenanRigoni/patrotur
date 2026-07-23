@@ -21,7 +21,7 @@ export function ServicesJourney() {
           {serviceStages.map((stage, index) => (
             <Reveal key={stage.step} delay={index * 0.12}>
               <div className="flex flex-col gap-3">
-                <span className="font-accent text-4xl text-turquoise-400">{stage.step}</span>
+                <span className="text-4xl font-bold text-white/20">{stage.step}</span>
                 <h3 className="text-lg font-bold text-white">{stage.title}</h3>
                 <p className="text-sm leading-relaxed text-white/65">{stage.description}</p>
               </div>

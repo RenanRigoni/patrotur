@@ -18,7 +18,7 @@ export function WhyPatrotur() {
           {whyReasons.map((reason, index) => (
             <Reveal key={reason.title} delay={index * 0.1}>
               <div className="flex gap-5 border-t border-navy-900/10 pt-6">
-                <span className="font-accent text-3xl text-turquoise-500">{String(index + 1).padStart(2, "0")}</span>
+                <span className="text-3xl font-bold text-navy-900/20">{String(index + 1).padStart(2, "0")}</span>
                 <div>
                   <h3 className="text-lg font-bold text-navy-950">{reason.title}</h3>
                   <p className="mt-1.5 text-sm leading-relaxed text-navy-900/65">{reason.description}</p>
