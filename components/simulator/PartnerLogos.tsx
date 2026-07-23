@@ -14,11 +14,7 @@ export function PartnerLogos() {
           {track.map((partner, index) => (
             <div
               key={`${partner.name}-${index}`}
-              className={`flex h-14 min-w-[160px] items-center justify-center rounded-xl border px-6 ${
-                partner.variant === "dark"
-                  ? "border-navy-900/10 bg-navy-950"
-                  : "border-navy-900/10 bg-navy-900/[0.03]"
-              }`}
+              className="flex h-14 min-w-[160px] items-center justify-center rounded-xl border border-navy-900/10 bg-navy-950 px-6"
             >
               <Image
                 src={partner.logoSrc}

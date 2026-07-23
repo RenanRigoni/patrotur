@@ -41,13 +41,24 @@ const chipClasses = (isSelected: boolean) =>
       : "border-navy-900/15 text-navy-900/70 hover:border-navy-900/30"
   }`;
 
+function formatTravelDate(isoDate: string): string {
+  if (!isoDate) return "";
+  const date = new Date(`${isoDate}T00:00:00Z`);
+  return new Intl.DateTimeFormat("pt-BR", {
+    day: "2-digit",
+    month: "long",
+    year: "numeric",
+    timeZone: "UTC",
+  }).format(date);
+}
+
 export function TravelSimulator() {
   const [stepIndex, setStepIndex] = useState(0);
   const [scope, setScope] = useState<Scope>("nacional");
   const [selectedDestinations, setSelectedDestinations] = useState<string[]>([]);
   const [isAddingOther, setIsAddingOther] = useState(false);
   const [otherValue, setOtherValue] = useState("");
-  const [period, setPeriod] = useState("");
+  const [travelDate, setTravelDate] = useState("");
   const [travelers, setTravelers] = useState(2);
   const [budget, setBudget] = useState<string | null>(null);
 
@@ -67,9 +78,11 @@ export function TravelSimulator() {
 
   const isLastStep = stepIndex === steps.length - 1;
 
+  const todayIso = new Date().toISOString().slice(0, 10);
+
   const canAdvance = [
     selectedDestinations.length > 0,
-    period.trim().length > 0,
+    Boolean(travelDate),
     travelers > 0,
     Boolean(budget),
   ][stepIndex];
@@ -100,7 +113,7 @@ export function TravelSimulator() {
     setSelectedDestinations([]);
     setIsAddingOther(false);
     setOtherValue("");
-    setPeriod("");
+    setTravelDate("");
     setTravelers(2);
     setBudget(null);
   };
@@ -110,7 +123,7 @@ export function TravelSimulator() {
       ? buildWhatsAppLink(
           whatsappMessages.simulator({
             destinations: selectedDestinations,
-            period,
+            period: formatTravelDate(travelDate),
             travelers,
             budget,
           }),
@@ -264,18 +277,18 @@ export function TravelSimulator() {
 
                   {stepIndex === 1 && (
                     <div>
-                      <label htmlFor="simulator-period" className="text-lg font-bold text-navy-950">
+                      <label htmlFor="simulator-date" className="text-lg font-bold text-navy-950">
                         Quando pretende viajar?
                       </label>
                       <p className="mt-1 text-sm text-navy-900/60">
-                        Uma ideia já ajuda, tipo &quot;julho de 2026&quot; ou &quot;próximas férias&quot;.
+                        Uma data estimada já ajuda — não precisa ser exata.
                       </p>
                       <input
-                        id="simulator-period"
-                        type="text"
-                        value={period}
-                        onChange={(event) => setPeriod(event.target.value)}
-                        placeholder="Ex: julho de 2026"
+                        id="simulator-date"
+                        type="date"
+                        min={todayIso}
+                        value={travelDate}
+                        onChange={(event) => setTravelDate(event.target.value)}
                         className="mt-4 w-full rounded-2xl border border-navy-900/15 px-4 py-3 text-navy-950 outline-none transition-colors focus:border-turquoise-500"
                       />
                     </div>
@@ -341,7 +354,7 @@ export function TravelSimulator() {
                           </div>
                           <div>
                             <dt className="text-navy-900/50">Período</dt>
-                            <dd className="font-semibold text-navy-950">{period}</dd>
+                            <dd className="font-semibold text-navy-950">{formatTravelDate(travelDate)}</dd>
                           </div>
                           <div>
                             <dt className="text-navy-900/50">Viajantes</dt>
