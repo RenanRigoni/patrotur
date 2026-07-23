@@ -1,5 +1,6 @@
 {
   "destinationWidths": [640, 960, 1600, 2048],
   "destinationCardWidths": [640, 960],
+  "brandAssetWidths": [200, 400, 800, 1200],
   "quality": 80
 }

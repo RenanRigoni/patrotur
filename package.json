@@ -4,10 +4,11 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "prebuild": "npm run images:destinations",
+    "prebuild": "npm run images:destinations && npm run images:brand",
     "build": "next build",
     "postbuild": "node scripts/prune-static-export.mjs",
     "images:destinations": "node scripts/generate-responsive-destinations.mjs",
+    "images:brand": "node scripts/generate-responsive-assets.mjs",
     "start": "next start",
     "lint": "eslint",
     "test": "vitest run"

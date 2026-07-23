@@ -30,6 +30,29 @@ describe("GitHub Pages image loader", () => {
     ).toBe(`/patrotur/images/destinations/responsive/gramado-${assetWidth}.webp`);
   });
 
+  it.each([
+    [150, 200],
+    [200, 200],
+    [201, 400],
+    [800, 800],
+    [801, 1200],
+    [3000, 1200],
+  ])("maps a %ipx brand asset request to the %ipx WebP variant", (width, assetWidth) => {
+    process.env.NEXT_PUBLIC_BASE_PATH = "/patrotur";
+
+    expect(imageLoader({ src: "/images/Lucio.png", width })).toBe(
+      `/patrotur/images/responsive/Lucio-${assetWidth}.webp`,
+    );
+  });
+
+  it("does not duplicate the base path for responsive brand asset images", () => {
+    process.env.NEXT_PUBLIC_BASE_PATH = "/patrotur";
+
+    expect(imageLoader({ src: "/patrotur/images/PATROTUR_HOR_WHITE.png", width: 400 })).toBe(
+      "/patrotur/images/responsive/PATROTUR_HOR_WHITE-400.webp",
+    );
+  });
+
   it("does not duplicate the base path for responsive destination images", () => {
     process.env.NEXT_PUBLIC_BASE_PATH = "/patrotur";
 
