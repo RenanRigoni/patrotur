@@ -14,21 +14,19 @@ export function PartnerLogos() {
           {track.map((partner, index) => (
             <div
               key={`${partner.name}-${index}`}
-              className="flex h-14 min-w-[160px] items-center justify-center rounded-xl border border-navy-900/10 bg-navy-900/[0.03] px-6"
+              className={`flex h-14 min-w-[160px] items-center justify-center rounded-xl border px-6 ${
+                partner.variant === "dark"
+                  ? "border-navy-900/10 bg-navy-950"
+                  : "border-navy-900/10 bg-navy-900/[0.03]"
+              }`}
             >
-              {partner.logoSrc ? (
-                <Image
-                  src={partner.logoSrc}
-                  alt={partner.name}
-                  width={120}
-                  height={40}
-                  className="h-8 w-auto object-contain"
-                />
-              ) : (
-                <span className="whitespace-nowrap text-sm font-bold uppercase tracking-wide text-navy-900/40">
-                  {partner.name}
-                </span>
-              )}
+              <Image
+                src={partner.logoSrc}
+                alt={partner.name}
+                width={partner.width}
+                height={partner.height}
+                className="h-8 w-auto object-contain"
+              />
             </div>
           ))}
         </div>
