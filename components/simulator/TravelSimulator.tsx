@@ -60,6 +60,7 @@ export function TravelSimulator() {
   const [otherValue, setOtherValue] = useState("");
   const [travelDate, setTravelDate] = useState("");
   const [travelers, setTravelers] = useState(2);
+  const [rooms, setRooms] = useState(1);
   const [budget, setBudget] = useState<string | null>(null);
 
   const scopeFeatured: Record<Scope, string[]> = {
@@ -83,7 +84,7 @@ export function TravelSimulator() {
   const canAdvance = [
     selectedDestinations.length > 0,
     Boolean(travelDate),
-    travelers > 0,
+    travelers > 0 && rooms > 0,
     Boolean(budget),
   ][stepIndex];
 
@@ -115,6 +116,7 @@ export function TravelSimulator() {
     setOtherValue("");
     setTravelDate("");
     setTravelers(2);
+    setRooms(1);
     setBudget(null);
   };
 
@@ -125,6 +127,7 @@ export function TravelSimulator() {
             destinations: selectedDestinations,
             period: formatTravelDate(travelDate),
             travelers,
+            rooms,
             budget,
           }),
         )
@@ -295,26 +298,51 @@ export function TravelSimulator() {
                   )}
 
                   {stepIndex === 2 && (
-                    <div>
-                      <p className="text-lg font-bold text-navy-950">Quantas pessoas vão viajar?</p>
-                      <div className="mt-5 flex items-center gap-6">
-                        <button
-                          type="button"
-                          onClick={() => setTravelers((count) => Math.max(1, count - 1))}
-                          aria-label="Diminuir número de viajantes"
-                          className="flex h-12 w-12 items-center justify-center rounded-full border border-navy-900/15 text-xl font-semibold text-navy-950 transition-colors hover:border-turquoise-500"
-                        >
-                          −
-                        </button>
-                        <span className="min-w-12 text-center text-2xl font-bold text-navy-950">{travelers}</span>
-                        <button
-                          type="button"
-                          onClick={() => setTravelers((count) => Math.min(20, count + 1))}
-                          aria-label="Aumentar número de viajantes"
-                          className="flex h-12 w-12 items-center justify-center rounded-full border border-navy-900/15 text-xl font-semibold text-navy-950 transition-colors hover:border-turquoise-500"
-                        >
-                          +
-                        </button>
+                    <div className="flex flex-col gap-8">
+                      <div>
+                        <p className="text-lg font-bold text-navy-950">Quantas pessoas vão viajar?</p>
+                        <div className="mt-5 flex items-center gap-6">
+                          <button
+                            type="button"
+                            onClick={() => setTravelers((count) => Math.max(1, count - 1))}
+                            aria-label="Diminuir número de viajantes"
+                            className="flex h-12 w-12 items-center justify-center rounded-full border border-navy-900/15 text-xl font-semibold text-navy-950 transition-colors hover:border-turquoise-500"
+                          >
+                            −
+                          </button>
+                          <span className="min-w-12 text-center text-2xl font-bold text-navy-950">{travelers}</span>
+                          <button
+                            type="button"
+                            onClick={() => setTravelers((count) => Math.min(20, count + 1))}
+                            aria-label="Aumentar número de viajantes"
+                            className="flex h-12 w-12 items-center justify-center rounded-full border border-navy-900/15 text-xl font-semibold text-navy-950 transition-colors hover:border-turquoise-500"
+                          >
+                            +
+                          </button>
+                        </div>
+                      </div>
+
+                      <div>
+                        <p className="text-lg font-bold text-navy-950">Quantos quartos/apartamentos?</p>
+                        <div className="mt-5 flex items-center gap-6">
+                          <button
+                            type="button"
+                            onClick={() => setRooms((count) => Math.max(1, count - 1))}
+                            aria-label="Diminuir número de quartos"
+                            className="flex h-12 w-12 items-center justify-center rounded-full border border-navy-900/15 text-xl font-semibold text-navy-950 transition-colors hover:border-turquoise-500"
+                          >
+                            −
+                          </button>
+                          <span className="min-w-12 text-center text-2xl font-bold text-navy-950">{rooms}</span>
+                          <button
+                            type="button"
+                            onClick={() => setRooms((count) => Math.min(10, count + 1))}
+                            aria-label="Aumentar número de quartos"
+                            className="flex h-12 w-12 items-center justify-center rounded-full border border-navy-900/15 text-xl font-semibold text-navy-950 transition-colors hover:border-turquoise-500"
+                          >
+                            +
+                          </button>
+                        </div>
                       </div>
                     </div>
                   )}
@@ -359,6 +387,10 @@ export function TravelSimulator() {
                           <div>
                             <dt className="text-navy-900/50">Viajantes</dt>
                             <dd className="font-semibold text-navy-950">{travelers}</dd>
+                          </div>
+                          <div>
+                            <dt className="text-navy-900/50">Quartos</dt>
+                            <dd className="font-semibold text-navy-950">{rooms}</dd>
                           </div>
                           <div className="col-span-2">
                             <dt className="text-navy-900/50">Investimento</dt>
