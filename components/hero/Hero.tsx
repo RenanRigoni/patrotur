@@ -9,6 +9,7 @@ import { whatsappMessages } from "@/content/whatsapp-messages";
 
 export function Hero() {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 
   useEffect(() => {
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -20,8 +21,8 @@ export function Hero() {
       <div className="absolute inset-0">
         <video
           ref={videoRef}
-          src="/images/hero-video.mp4"
-          poster="/images/hero-video-poster.jpg"
+          src={`${basePath}/images/hero-video.mp4`}
+          poster={`${basePath}/images/hero-video-poster.jpg`}
           autoPlay
           muted
           loop
