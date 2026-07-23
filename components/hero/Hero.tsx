@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import { useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/Button";
 import { RouteMotif } from "@/components/ui/RouteMotif";
@@ -8,16 +8,27 @@ import { buildWhatsAppLink } from "@/lib/whatsapp";
 import { whatsappMessages } from "@/content/whatsapp-messages";
 
 export function Hero() {
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (prefersReducedMotion) videoRef.current?.pause();
+  }, []);
+
   return (
     <section id="topo" className="relative flex min-h-[100svh] items-end overflow-hidden bg-navy-950">
       <div className="absolute inset-0">
-        <Image
-          src="/images/destinations/fernando-de-noronha.jpg"
-          alt="Vista aérea de águas azul-turquesa de Fernando de Noronha, sintetizando o convite da Patrotur para viajar"
-          fill
-          priority
-          sizes="100vw"
-          className="object-cover object-center animate-hero-kenburns"
+        <video
+          ref={videoRef}
+          src="/images/hero-video.mp4"
+          poster="/images/hero-video-poster.jpg"
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="auto"
+          aria-hidden="true"
+          className="h-full w-full object-cover object-center"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-navy-950 via-navy-950/55 to-navy-950/20" />
         <div className="absolute inset-0 bg-gradient-to-b from-navy-950/70 via-transparent to-transparent" />
