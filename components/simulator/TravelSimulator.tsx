@@ -146,6 +146,9 @@ export function TravelSimulator() {
 
         <Reveal delay={0.1} className="mt-10">
           <div className="rounded-[28px] border border-navy-900/10 bg-white p-8 shadow-[0_20px_60px_-30px_rgba(11,26,51,0.25)] sm:p-10">
+            <p className="sr-only" aria-live="polite">
+              Passo {stepIndex + 1} de {steps.length}: {steps[stepIndex]}
+            </p>
             <div className="mb-8 flex items-center gap-2" aria-hidden="true">
               {steps.map((label, index) => (
                 <div
@@ -312,7 +315,7 @@ export function TravelSimulator() {
                           >
                             −
                           </button>
-                          <span className="min-w-12 text-center text-2xl font-bold text-navy-950">{travelers}</span>
+                          <span aria-live="polite" className="min-w-12 text-center text-2xl font-bold text-navy-950">{travelers}</span>
                           <button
                             type="button"
                             onClick={() => setTravelers((count) => Math.min(20, count + 1))}
@@ -335,7 +338,7 @@ export function TravelSimulator() {
                           >
                             −
                           </button>
-                          <span className="min-w-12 text-center text-2xl font-bold text-navy-950">{rooms}</span>
+                          <span aria-live="polite" className="min-w-12 text-center text-2xl font-bold text-navy-950">{rooms}</span>
                           <button
                             type="button"
                             onClick={() => setRooms((count) => Math.min(10, count + 1))}
