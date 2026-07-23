@@ -11,11 +11,18 @@ import {
   nationalMore,
   internationalFeatured,
   internationalMore,
+  landmarks,
 } from "@/content/simulator-destinations";
 import { buildWhatsAppLink } from "@/lib/whatsapp";
 import { whatsappMessages } from "@/content/whatsapp-messages";
 
-type Scope = "nacional" | "internacional";
+type Scope = "nacional" | "internacional" | "pontoTuristico";
+
+const scopeLabels: Record<Scope, string> = {
+  nacional: "Nacional",
+  internacional: "Internacional",
+  pontoTuristico: "Ponto turístico",
+};
 
 const budgetRanges = [
   "Até R$ 2.000 por pessoa",
@@ -44,9 +51,19 @@ export function TravelSimulator() {
   const [travelers, setTravelers] = useState(2);
   const [budget, setBudget] = useState<string | null>(null);
 
-  const featured = scope === "nacional" ? nationalFeatured : internationalFeatured;
-  const moreOptions = scope === "nacional" ? nationalMore : internationalMore;
-  const datalistId = scope === "nacional" ? "destinos-nacionais" : "destinos-internacionais";
+  const scopeFeatured: Record<Scope, string[]> = {
+    nacional: nationalFeatured,
+    internacional: internationalFeatured,
+    pontoTuristico: landmarks,
+  };
+  const scopeMore: Record<Scope, string[]> = {
+    nacional: nationalMore,
+    internacional: internationalMore,
+    pontoTuristico: [],
+  };
+  const featured = scopeFeatured[scope];
+  const moreOptions = scopeMore[scope];
+  const datalistId = `destinos-${scope}`;
 
   const isLastStep = stepIndex === steps.length - 1;
 
@@ -139,26 +156,31 @@ export function TravelSimulator() {
                         Para onde você quer ir? (pode escolher mais de um)
                       </legend>
 
-                      <div role="group" aria-label="Tipo de destino" className="mt-4 inline-flex rounded-full border border-navy-900/15 p-1">
-                        <button
-                          type="button"
-                          onClick={() => setScope("nacional")}
-                          className={`rounded-full px-4 py-1.5 text-sm font-semibold transition-all duration-300 ${
-                            scope === "nacional" ? "bg-turquoise-500 text-navy-950" : "text-navy-900/60"
-                          }`}
-                        >
-                          Nacional
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => setScope("internacional")}
-                          className={`rounded-full px-4 py-1.5 text-sm font-semibold transition-all duration-300 ${
-                            scope === "internacional" ? "bg-turquoise-500 text-navy-950" : "text-navy-900/60"
-                          }`}
-                        >
-                          Internacional
-                        </button>
+                      <div
+                        role="group"
+                        aria-label="Tipo de destino"
+                        className="mt-4 inline-flex flex-wrap gap-1 rounded-full border border-navy-900/15 p-1"
+                      >
+                        {(Object.keys(scopeLabels) as Scope[]).map((scopeOption) => (
+                          <button
+                            key={scopeOption}
+                            type="button"
+                            onClick={() => setScope(scopeOption)}
+                            className={`rounded-full px-4 py-1.5 text-sm font-semibold transition-all duration-300 ${
+                              scope === scopeOption ? "bg-turquoise-500 text-navy-950" : "text-navy-900/60"
+                            }`}
+                          >
+                            {scopeLabels[scopeOption]}
+                          </button>
+                        ))}
                       </div>
+
+                      {scope === "pontoTuristico" && (
+                        <p className="mt-3 text-sm text-navy-900/60">
+                          Já sabe a cidade? Escolha ela em Nacional ou Internacional e some aqui o ponto turístico
+                          que quer conhecer, tipo Cristo Redentor no Rio de Janeiro.
+                        </p>
+                      )}
 
                       <div className="mt-5 flex flex-wrap gap-2.5">
                         {featured.map((name) => (
@@ -176,7 +198,7 @@ export function TravelSimulator() {
                           onClick={() => setIsAddingOther((current) => !current)}
                           className={chipClasses(isAddingOther)}
                         >
-                          Outro destino
+                          {scope === "pontoTuristico" ? "Outro ponto turístico" : "Outro destino"}
                         </button>
                       </div>
 
@@ -184,7 +206,7 @@ export function TravelSimulator() {
                         <div className="mt-4 flex flex-col gap-2 sm:flex-row">
                           <input
                             type="text"
-                            list={datalistId}
+                            list={moreOptions.length > 0 ? datalistId : undefined}
                             value={otherValue}
                             onChange={(event) => setOtherValue(event.target.value)}
                             onKeyDown={(event) => {
@@ -193,14 +215,20 @@ export function TravelSimulator() {
                                 addOtherDestination();
                               }
                             }}
-                            placeholder="Digite ou busque o destino"
+                            placeholder={
+                              scope === "pontoTuristico"
+                                ? "Digite o ponto turístico"
+                                : "Digite ou busque o destino"
+                            }
                             className="w-full rounded-2xl border border-navy-900/15 px-4 py-3 text-navy-950 outline-none transition-colors focus:border-turquoise-500"
                           />
-                          <datalist id={datalistId}>
-                            {moreOptions.map((name) => (
-                              <option key={name} value={name} />
-                            ))}
-                          </datalist>
+                          {moreOptions.length > 0 && (
+                            <datalist id={datalistId}>
+                              {moreOptions.map((name) => (
+                                <option key={name} value={name} />
+                              ))}
+                            </datalist>
+                          )}
                           <button
                             type="button"
                             onClick={addOtherDestination}
