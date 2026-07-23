@@ -3,6 +3,7 @@ import { Hero } from "@/components/hero/Hero";
 import { TrustBar } from "@/components/trust/TrustBar";
 import { DestinationDiscovery } from "@/components/destinations/DestinationDiscovery";
 import { TravelStyleQuiz } from "@/components/quiz/TravelStyleQuiz";
+import { TravelSimulator } from "@/components/simulator/TravelSimulator";
 import { ServicesJourney } from "@/components/services/ServicesJourney";
 import { WhyPatrotur } from "@/components/why/WhyPatrotur";
 import { RouteTimeline } from "@/components/how-it-works/RouteTimeline";
@@ -23,6 +24,7 @@ export default function Home() {
         <TrustBar />
         <DestinationDiscovery />
         <TravelStyleQuiz />
+        <TravelSimulator />
         <ServicesJourney />
         <WhyPatrotur />
         <RouteTimeline />
