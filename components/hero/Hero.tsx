@@ -31,8 +31,8 @@ export function Hero() {
           aria-hidden="true"
           className="h-full w-full object-cover object-center"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-navy-950 via-navy-950/55 to-navy-950/20" />
-        <div className="absolute inset-0 bg-gradient-to-b from-navy-950/70 via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-navy-950 via-navy-950/60 to-navy-950/25" />
+        <div className="absolute inset-0 bg-gradient-to-b from-navy-950/75 via-transparent to-transparent" />
       </div>
 
       <div className="relative z-10 mx-auto flex w-full max-w-7xl flex-col gap-8 px-6 pb-20 pt-24 sm:px-8 sm:pb-28">
